@@ -122,7 +122,8 @@ EXTRAINCDIRS = ./usbdrv
 #     gnu89 = c89 plus GCC extensions
 #     c99   = ISO C99 standard (not yet fully implemented)
 #     gnu99 = c99 plus GCC extensions
-CSTANDARD = -std=gnu99
+#     gnu++11 = this was taken from
+CSTANDARD = -std=gnu++11
 
 
 # Place -D or -U options here for C sources
@@ -177,11 +178,21 @@ CFLAGS += $(CSTANDARD)
 CPPFLAGS = -g$(DEBUG)
 CPPFLAGS += $(CPPDEFS)
 CPPFLAGS += -O$(OPT)
+CPPFLAGS += -fpermissive
+CPPFLAGS += -fno-exceptions
+CPPFLAGS += -ffunction-sections
+CPPFLAGS += -fdata-sections
+CPPFLAGS += -fno-threadsafe-statics
+CPPFLAGS += -Wno-error=narrowing
+CPPFLAGS += -flto
+CPPFLAGS += -w
+CPPFLAGS += -x c++
+CPPFLAGS += -E
+CPPFLAGS += -CC
 CPPFLAGS += -funsigned-char
 CPPFLAGS += -funsigned-bitfields
 CPPFLAGS += -fpack-struct
 CPPFLAGS += -fshort-enums
-CPPFLAGS += -fno-exceptions
 CPPFLAGS += -Wall
 CPPFLAGS += -Wundef
 #CPPFLAGS += -mshort-calls
@@ -191,7 +202,7 @@ CPPFLAGS += -Wundef
 #CPPFLAGS += -Wsign-compare
 CPPFLAGS += -Wa,-adhlns=$(<:%.cpp=$(OBJDIR)/%.lst)
 CPPFLAGS += $(patsubst %,-I%,$(EXTRAINCDIRS))
-#CPPFLAGS += $(CSTANDARD)
+CPPFLAGS += $(CSTANDARD)
 
 
 #---------------- Assembler Options ----------------
@@ -274,19 +285,19 @@ LDFLAGS += $(PRINTF_LIB) $(SCANF_LIB) $(MATH_LIB)
 # Type: avrdude -c ?
 # to get a full listing.
 #
-AVRDUDE_PROGRAMMER = usbasp
+AVRDUDE_PROGRAMMER = arduino
 
 # com1 = serial port. Use lpt1 to connect to parallel port.
-AVRDUDE_PORT = usb
+AVRDUDE_PORT = /dev/ttyUSB0
 
 AVRDUDE_HFUSE = 0xD4
 AVRDUDE_LFUSE = 0xDF
 
 AVRDUDE_WRITE_FLASH = -U flash:w:$(TARGET).hex
-AVRDUDE_WRITE_EEPROM = -U eeprom:w:$(TARGET).eep
-AVRDUDE_WRITE_FUSE = -U hfuse:w:$(AVRDUDE_HFUSE):m -U lfuse:w:$(AVRDUDE_LFUSE):m
+AVRDUDE_WRITE_EEPROM = #-U eeprom:w:$(TARGET).eep
+AVRDUDE_WRITE_FUSE = #-U hfuse:w:$(AVRDUDE_HFUSE):m -U lfuse:w:$(AVRDUDE_LFUSE):m
 
-AVRDUDE_BITCLOCK = -B 3
+AVRDUDE_BITCLOCK = #-B 3
 
 # Uncomment the following if you want avrdude's erase cycle counter.
 # Note that this counter needs to be initialized first using -Yn,
@@ -300,15 +311,13 @@ AVRDUDE_BITCLOCK = -B 3
 # Increase verbosity level.  Please use this when submitting bug
 # reports about avrdude. See <http://savannah.nongnu.org/projects/avrdude> 
 # to submit bug reports.
-#AVRDUDE_VERBOSE = -v -v
+AVRDUDE_VERBOSE = -v
 
-AVRDUDE_FLAGS = -p $(MCU) -P $(AVRDUDE_PORT) -c $(AVRDUDE_PROGRAMMER)
+AVRDUDE_FLAGS = -p $(MCU) -P $(AVRDUDE_PORT) -c $(AVRDUDE_PROGRAMMER) -b 57600 -D
 AVRDUDE_FLAGS += $(AVRDUDE_BITCLOCK)
 AVRDUDE_FLAGS += $(AVRDUDE_NO_VERIFY)
 AVRDUDE_FLAGS += $(AVRDUDE_VERBOSE)
 AVRDUDE_FLAGS += $(AVRDUDE_ERASE_COUNTER)
-
-
 
 #---------------- Debugging Options ----------------
 
