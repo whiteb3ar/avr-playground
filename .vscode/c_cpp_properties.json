@@ -1,0 +1,17 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "/home/andrei/dev/avr8-gnu-toolchain-3.6.2.1759-linux.any.x86_64/avr8-gnu-toolchain-linux_x86_64/avr/include/**"
+            ],
+            "defines": ["__AVR_ATmega328P__"],
+            "compilerPath": "/home/andrei/dev/avr8-gnu-toolchain-3.6.2.1759-linux.any.x86_64/avr8-gnu-toolchain-linux_x86_64/bin/avr-gcc",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "clang-x64"
+        }
+    ],
+    "version": 4
+}
